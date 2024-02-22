@@ -36,27 +36,27 @@ cube(`glpi_tickets`, {
       type: `number`,
     },
     entities_id: {
-      // sql: `entities_id`,
+      sql: `entities_id`,
       type: `number`,
-      case: {
-        when: [
-          {
-            sql: `${CUBE}.entities_id = 0`,
-            label: `Layanan BPS`,
-          },
-          {
-            sql: `${CUBE}.entities_id = 1`,
-            label: `Layanan TI Pusat`,
-          },
-          {
-            sql: `${CUBE}.entities_id = 2`,
-            label: `Layanan BPS Provinsi Riau`,
-          },
-        ],
-        else: {
-          label: `Unknown`,
-        },
-      },
+      // case: {
+      //   when: [
+      //     {
+      //       sql: `${CUBE}.entities_id = 0`,
+      //       label: `Layanan BPS`,
+      //     },
+      //     {
+      //       sql: `${CUBE}.entities_id = 1`,
+      //       label: `Layanan TI Pusat`,
+      //     },
+      //     {
+      //       sql: `${CUBE}.entities_id = 2`,
+      //       label: `Layanan BPS Provinsi Riau`,
+      //     },
+      //   ],
+      //   else: {
+      //     label: `Unknown`,
+      //   },
+      // },
     },
     type: {
       // sql: `type`,
@@ -131,6 +131,26 @@ cube(`glpi_tickets`, {
       type: `count`,
       title: "Total Tiket Assign",
     },
+    TotalTicketLayananBPS: {
+      sql: `CASE WHEN entities_id = 1 THEN 1 ELSE 0 END`,
+      type: `count`,
+      title: "Total Tiket Layanan BPS",
+    },
+    TotalTicketGangguan: {
+      sql: `CASE WHEN type = 1 THEN 1 ELSE 0 END`,
+      type: `count`,
+      title: "Total Tiket Gangguan",
+    },
+    TotalTicketStatusNew: {
+      sql: `CASE WHEN status = 1 THEN 1 ELSE 0 END`,
+      type: `count`,
+      title: "Total Tiket Status New",
+    },
+    TotalTicketUrgencySedang: {
+      sql: `CASE WHEN urgency = 3 THEN 1 ELSE 0 END`,
+      type: `count`,
+      title: "Total Tiket Urgency Sedang",
+    },
     sla_waiting_duration: {
       sql: `sla_waiting_duration`,
       type: `sum`,
@@ -144,7 +164,26 @@ cube(`glpi_tickets`, {
       type: `sum`,
     },
   },
-  pre_aggregations: {},
+  pre_aggregations: {
+    orders_rollup: {
+      // measures: [`${CUBE}.count`],
+      // dimensions: [`${CUBE}.nup_bmn_value, ${CUBE}.status`],
+      measures: [CUBE.count],
+      dimensions: [CUBE.nup_bmn_value, CUBE.status],
+      // time_dimension: CUBE.date,
+      // granularity: `day`,
+    },
+    // Here we add a new pre-aggregation of type `rollup_join`
+    orders_with_users_rollup: {
+      type: `rollup_join`,
+      measures: [CUBE.count],
+      // dimensions: [assets.name],
+      // measures: [`${CUBE}.count`],
+      dimensions: [`${assets.name}`],
+      rollups: [assets.bmn_rollup, CUBE.orders_rollup],
+      // rollups: [`${assets}.bmn_rollup, ${CUBE}.orders_rollup`],
+    },
+  },
   joins: {
     glpi_entities: {
       relationship: `hasOne`,
@@ -154,5 +193,14 @@ cube(`glpi_tickets`, {
     //   relationship: `hasOne`,
     //   sql: `${CUBE}.nup_bmn_value = ${glpi_assets.bmn}`,
     // },
+    // assets: {
+    //   relationship: `hasOne`,
+    //   // sql: `${CUBE}.nup_bmn_value = ${assets.bmn}`,
+    //   sql: `${CUBE}.nup_bmn_value = ${assets.bmn}`,
+    // },
+    assets: {
+      relationship: `hasOne`,
+      sql: `${CUBE}.nup_bmn_value = ${assets}.bmn`, // Make sure `bmn` is a defined dimension in the `assets` cube
+    },
   },
 });

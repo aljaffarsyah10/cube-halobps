@@ -32,12 +32,9 @@ cube(`assets`, {
   },
 
   pre_aggregations: {
-    users_rollup: {
-      dimensions: [CUBE.bmn, CUBE.name],
+    bmn_rollup: {
+      // dimensions: [CUBE.bmn, CUBE.name],
+      dimensions: [`${CUBE}.bmn`, `${CUBE}.name`],
     },
-  },
-  bmn_rollup: {
-    // dimensions: [CUBE.bmn, CUBE.content],
-    dimensions: [`${CUBE}.bmn, ${CUBE}.content`],
   },
 });
