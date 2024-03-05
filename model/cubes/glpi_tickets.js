@@ -165,24 +165,24 @@ cube(`glpi_tickets`, {
     },
   },
   pre_aggregations: {
-    orders_rollup: {
-      // measures: [`${CUBE}.count`],
-      // dimensions: [`${CUBE}.nup_bmn_value, ${CUBE}.status`],
-      measures: [CUBE.count],
-      dimensions: [CUBE.nup_bmn_value, CUBE.status],
-      // time_dimension: CUBE.date,
-      // granularity: `day`,
-    },
-    // Here we add a new pre-aggregation of type `rollup_join`
-    orders_with_users_rollup: {
-      type: `rollup_join`,
-      measures: [CUBE.count],
-      // dimensions: [assets.name],
-      // measures: [`${CUBE}.count`],
-      dimensions: [`${assets.name}`],
-      rollups: [assets.bmn_rollup, CUBE.orders_rollup],
-      // rollups: [`${assets}.bmn_rollup, ${CUBE}.orders_rollup`],
-    },
+    // orders_rollup: {
+    //   // measures: [`${CUBE}.count`],
+    //   // dimensions: [`${CUBE}.nup_bmn_value, ${CUBE}.status`],
+    //   measures: [CUBE.count],
+    //   dimensions: [CUBE.nup_bmn_value, CUBE.status],
+    //   // time_dimension: CUBE.date,
+    //   // granularity: `day`,
+    // },
+    // // Here we add a new pre-aggregation of type `rollup_join`
+    // orders_with_users_rollup: {
+    //   type: `rollup_join`,
+    //   measures: [CUBE.count],
+    //   // dimensions: [assets.name],
+    //   // measures: [`${CUBE}.count`],
+    //   dimensions: [`${assets.name}`],
+    //   rollups: [assets.bmn_rollup, CUBE.orders_rollup],
+    //   // rollups: [`${assets}.bmn_rollup, ${CUBE}.orders_rollup`],
+    // },
   },
   joins: {
     glpi_entities: {
@@ -198,9 +198,9 @@ cube(`glpi_tickets`, {
     //   // sql: `${CUBE}.nup_bmn_value = ${assets.bmn}`,
     //   sql: `${CUBE}.nup_bmn_value = ${assets.bmn}`,
     // },
-    assets: {
-      relationship: `hasOne`,
-      sql: `${CUBE}.nup_bmn_value = ${assets}.bmn`, // Make sure `bmn` is a defined dimension in the `assets` cube
-    },
+    // assets: {
+    //   relationship: `hasOne`,
+    //   sql: `${CUBE}.nup_bmn_value = ${assets}.bmn`, // Make sure `bmn` is a defined dimension in the `assets` cube
+    // },
   },
 });
