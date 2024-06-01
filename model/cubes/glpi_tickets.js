@@ -35,6 +35,10 @@ cube(`glpi_tickets`, {
       sql: `urgency`,
       type: `number`,
     },
+    impact: {
+      sql: `impact`,
+      type: `number`,
+    },
     entities_id: {
       sql: `entities_id`,
       type: `number`,
@@ -141,6 +145,11 @@ cube(`glpi_tickets`, {
       type: `count`,
       title: "Total Tiket Gangguan",
     },
+    TotalTicketImpact: {
+      sql: `CASE WHEN impact = 1 THEN 1 ELSE 0 END`,
+      type: `count`,
+      title: "Total Impact Tiket",
+    },
     TotalTicketStatusNew: {
       sql: `CASE WHEN status = 1 THEN 1 ELSE 0 END`,
       type: `count`,
@@ -177,30 +186,55 @@ cube(`glpi_tickets`, {
     // orders_with_users_rollup: {
     //   type: `rollup_join`,
     //   measures: [CUBE.count],
+    //   external: true,
     //   // dimensions: [assets.name],
     //   // measures: [`${CUBE}.count`],
     //   dimensions: [`${assets.name}`],
     //   rollups: [assets.bmn_rollup, CUBE.orders_rollup],
     //   // rollups: [`${assets}.bmn_rollup, ${CUBE}.orders_rollup`],
     // },
+
+    bmnRollup: {
+      type: `rollup`,
+      external: true,
+      dimensions: [CUBE.name, CUBE.nup_bmn_value],
+      // measures: [CUBE.count],
+      indexes: { category_index: { columns: [CUBE.nup_bmn_value] } },
+    },
+    // combinedRollup: {
+    //   type: `rollupJoin`,
+    //   dimensions: [assets.asset_tag, assets.bmn, CUBE.name],
+    //   rollups: [assets.assetsRollup, CUBE.bmnRollup],
+    // },
+    combinedRollup: {
+      type: `rollupJoin`,
+      dimensions: [assets.bmn, assets.asset_tag, CUBE.name],
+      rollups: [assets.assetsRollup, CUBE.bmnRollup],
+      external: true,
+    },
   },
   joins: {
     glpi_entities: {
       relationship: `hasOne`,
       sql: `${CUBE}.entities_id = ${glpi_entities.id}`,
     },
-    // glpi_assets: {
-    //   relationship: `hasOne`,
-    //   sql: `${CUBE}.nup_bmn_value = ${glpi_assets.bmn}`,
-    // },
+    glpi_assets: {
+      relationship: `hasOne`,
+      sql: `${CUBE}.nup_bmn_value = ${glpi_assets.bmn}`,
+    },
     // assets: {
     //   relationship: `hasOne`,
     //   // sql: `${CUBE}.nup_bmn_value = ${assets.bmn}`,
-    //   sql: `${CUBE}.nup_bmn_value = ${assets.bmn}`,
+    //   sql: `${CUBE.nup_bmn_value} = ${assets.bmn}`,
     // },
     // assets: {
     //   relationship: `hasOne`,
     //   sql: `${CUBE}.nup_bmn_value = ${assets}.bmn`, // Make sure `bmn` is a defined dimension in the `assets` cube
     // },
+
+    assets: {
+      sql: `${CUBE.nup_bmn_value} = ${assets.bmn}`,
+      relationship: `belongsTo`,
+    },
   },
 });

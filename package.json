@@ -1,6 +1,6 @@
 {
   "name": "cube-halobps",
-  "version": "0.0.1",
+  "version": "0.34.59",
   "private": true,
   "scripts": {
     "dev": "cubejs-server"
@@ -10,5 +10,9 @@
   "devDependencies": {
     "@cubejs-backend/mysql-driver": "^0.34.50",
     "@cubejs-backend/server": "^0.34.50"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "punycode": "^2.3.1"
   }
 }

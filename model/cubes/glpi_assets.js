@@ -16,7 +16,8 @@ cube(`glpi_assets`, {
     //   type: `string`,
     // },
     name: {
-      sql: `name`,
+      // sql: `name`,
+      sql: `COALESCE(NULLIF(${CUBE}.name, ''), 'non-bmn')`,
       type: `string`,
     },
     bmn: {

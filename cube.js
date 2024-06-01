@@ -25,3 +25,48 @@
 //     throw new Error("dataSource is undefined");
 //   },
 // };
+
+// module.exports = {
+//   // ...
+//   dbType: "mysql",
+//   preAggregations: {
+//     // ...
+//     use: "file",
+//     external: true,
+//     externalUse: true,
+//   },
+// };
+
+// module.exports = {
+//   preAggregationsSchema: ({ securityContext }) => {
+//     return `pre_aggregations_${securityContext.tenant_id}`;
+//   },
+// };
+
+module.exports = {
+  driverFactory: ({ dataSource }) => {
+    if (dataSource === "default") {
+      return {
+        type: "mysql",
+        database: "cube-halobps",
+        host: "localhost",
+        user: "root",
+        password: "",
+        port: "3306",
+      };
+    }
+
+    if (dataSource === "assets") {
+      return {
+        type: "mysql",
+        database: "simpatipti_db",
+        host: "localhost",
+        user: "root",
+        password: "",
+        port: "3306",
+      };
+    }
+
+    throw new Error("dataSource is undefined");
+  },
+};
