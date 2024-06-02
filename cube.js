@@ -43,30 +43,32 @@
 //   },
 // };
 
-module.exports = {
-  driverFactory: ({ dataSource }) => {
-    if (dataSource === "default") {
-      return {
-        type: "mysql",
-        database: "cube-halobps",
-        host: "localhost",
-        user: "root",
-        password: "",
-        port: "3306",
-      };
-    }
+// module.exports = {
+//   driverFactory: ({ dataSource }) => {
+//     if (dataSource === "default") {
+//       return {
+//         type: "mysql",
+//         database: "cube-halobps",
+//         host: "localhost",
+//         user: "root",
+//         password: "",
+//         port: "3306",
+//       };
+//     }
 
-    if (dataSource === "assets") {
-      return {
-        type: "mysql",
-        database: "simpatipti_db",
-        host: "localhost",
-        user: "root",
-        password: "",
-        port: "3306",
-      };
-    }
+//     if (dataSource === "assets") {
+//       return {
+//         type: "mysql",
+//         database: "simpatipti_db",
+//         host: "localhost",
+//         user: "root",
+//         password: "",
+//         port: "3306",
+//       };
+//     }
 
-    throw new Error("dataSource is undefined");
-  },
-};
+//     throw new Error("dataSource is undefined");
+//   },
+// };
+
+module.exports = {};
